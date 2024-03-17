@@ -1,4 +1,4 @@
-package com.example.curso.entities;
+package com.example.curso.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -6,11 +6,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
 @Entity
-@Table(name = "tb_user")
+@Table(name = "users")
 public class Users implements Serializable {
     public interface CreateUser {}
     public interface UpdateUser {}
@@ -41,7 +43,8 @@ public class Users implements Serializable {
     @Size(groups = {CreateUser.class, UpdateUser.class}, min = 8, max = 60)
     private String password;
 
-    //private List<Task> tasks = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<Tasks> tasks = new ArrayList<>();
 
     public Users(){
 
