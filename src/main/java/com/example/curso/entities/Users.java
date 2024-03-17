@@ -1,30 +1,53 @@
 package com.example.curso.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 
 @Entity
+@Table(name = "tb_user")
 public class Users implements Serializable {
-    private static final long serialVersionUID = 1L;
+    public interface CreateUser {}
+    public interface UpdateUser {}
+    private static final Long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(name = "id", unique = true)
+    private Long id;
+    @Column(name = "username", length = 100, nullable = false, unique = true)
+    @NotNull(groups = CreateUser.class)
+    @NotEmpty(groups = CreateUser.class)
+    @Size(groups = CreateUser.class, min = 2, max = 100)
     private String name;
+    @Column(name = "email", length = 50, nullable = false, unique = true)
+    @NotNull(groups =  CreateUser.class)
+    @NotEmpty(groups = CreateUser.class)
+    @Size(groups = CreateUser.class, min = 6, max = 100)
     private String email;
+    @Column(name = "phone", length = 11, nullable = false, unique = true)
+    @NotNull(groups = {CreateUser.class, UpdateUser.class})
+    @NotEmpty(groups = {CreateUser.class, UpdateUser.class})
+    @Size(groups = {CreateUser.class, UpdateUser.class}, min = 11)
     private String phone;
+    @Column(name = "password", length = 60, nullable = false)
+    @NotNull(groups = {CreateUser.class, UpdateUser.class})
+    @NotEmpty(groups = {CreateUser.class, UpdateUser.class})
+    @Size(groups = {CreateUser.class, UpdateUser.class}, min = 8, max = 60)
     private String password;
+
+    //private List<Task> tasks = new ArrayList<>();
 
     public Users(){
 
     }
 
-    public Users(long id, String name, String email, String phone, String password) {
+    public Users(Long id, String name, String email, String phone, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -32,11 +55,11 @@ public class Users implements Serializable {
         this.password = password;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -73,15 +96,34 @@ public class Users implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Users user)) return false;
-        return id == user.id;
+    public boolean equals(Object obj) {
+
+        if (obj == this){
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Users)){
+            return false;
+        }
+        Users other = (Users) obj;
+        if (this.id == null)
+            if (other.id != null )
+                return false;
+            else if (!this.id.equals(other.id)) {
+                return false;
+            }
+        return Objects.equals(this.id, other.id) && Objects.equals(this.name, other.name)
+                && Objects.equals(this.password, other.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+        return result;
     }
 
 }
