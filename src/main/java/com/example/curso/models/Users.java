@@ -90,6 +90,14 @@ public class Users implements Serializable {
         this.phone = phone;
     }
 
+    public List<Tasks> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Tasks> tasks) {
+        this.tasks = tasks;
+    }
+
     public String getPassword() {
         return password;
     }
