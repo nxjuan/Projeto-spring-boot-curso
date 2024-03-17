@@ -1,7 +1,6 @@
 package com.example.curso.services;
 
 import com.example.curso.models.Users;
-import com.example.curso.repositories.TaskRepository;
 import com.example.curso.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,8 +12,6 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private TaskRepository taskRepository;
 
     public Users findById(Long id){
         Optional<Users> user = this.userRepository.findById(id);
@@ -27,7 +24,6 @@ public class UserService {
     public Users create(Users obj){
         obj.setId(null);
         obj = this.userRepository.save(obj);
-        this.taskRepository.saveAll(obj.getTasks());
         return obj;
     }
 
